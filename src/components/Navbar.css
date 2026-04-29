@@ -45,7 +45,7 @@
 
 .nav-link.active {
   color: var(--accent);
-  background: rgba(124, 92, 252, 0.12);
+  background: rgba(16, 185, 129, 0.12);
 }
 
 .navbar-actions {

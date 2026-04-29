@@ -1,15 +1,19 @@
 import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
+import Home from './pages/Home'
+import GameList from './pages/GameList'
+import GameDetail from './pages/GameDetail'
+import NotFound from './pages/NotFound'
 
 function App() {
   return (
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<div>Home</div>} />
-        <Route path="/items" element={<div>Lista</div>} />
-        <Route path="/items/:id" element={<div>Detalle</div>} />
-        <Route path="*" element={<div>404</div>} />
+        <Route path="/" element={<Home />} />
+        <Route path="/items" element={<GameList />} />
+        <Route path="/items/:id" element={<GameDetail />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   )
