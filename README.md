@@ -1,28 +1,33 @@
-# 🎮 GameBlog — Mini-blog de Videojuegos
+# GameBlog — Mini-blog de Videojuegos
 
-Mini-blog construido con **Vite + React + React Router v6** como ejercicio universitario.
+Mini-blog de videojuegos construido con **Vite + React + React Router v6** como ejercicio universitario.
 
 ## Nivel declarado: Senior (100 pts)
 
-Este proyecto apunta al nivel **Senior**, que incluye:
+| Nivel | Requerimientos cumplidos |
+|-------|--------------------------|
+| **Junior** | Proyecto con Vite, 3 rutas, datos en capa separada, `useParams`, `<Link>`, README |
+| **Mid** | + Página 404, búsqueda/filtro, botón aleatorio con `useNavigate`, componentes con PropTypes |
+| **Senior** | + Context API (tema + favoritos), 3 componentes con PropTypes, consumo de API externa (RAWG) |
 
-- Todo lo del nivel Junior y Mid
-- Estado global con **Context API** (tema claro/oscuro + favoritos)
-- Al menos **3 componentes con PropTypes** definidos
-- Consumo de una **API pública** de videojuegos (RAWG Video Games Database)
+---
 
 ## Stack tecnológico
 
-- [Vite](https://vite.dev/) — bundler y dev server
+- [Vite 8](https://vite.dev/) — bundler y dev server
 - [React 19](https://react.dev/) — UI
-- [React Router DOM v6](https://reactrouter.com/) — enrutamiento
-- [prop-types](https://www.npmjs.com/package/prop-types) — validación de props
-- [RAWG API](https://rawg.io/apidocs) — base de datos de videojuegos
+- [React Router DOM v6](https://reactrouter.com/) — enrutamiento SPA
+- [prop-types](https://www.npmjs.com/package/prop-types) — validación de props en runtime
+- [RAWG Video Games Database API](https://rawg.io/apidocs) — fuente de datos de videojuegos
+
+---
 
 ## Requisitos previos
 
-1. Node.js 18+
-2. Una API key gratuita de [RAWG](https://rawg.io/apidocs) (registro instantáneo)
+- Node.js 18 o superior
+- API key gratuita de [RAWG](https://rawg.io/apidocs) (registro instantáneo en rawg.io)
+
+---
 
 ## Cómo correr el proyecto
 
@@ -32,59 +37,147 @@ git clone https://github.com/dcoronado91/ej4-react.git
 cd ej4-react
 
 # 2. Instalar dependencias
-cd blog-frontend
 npm install
 
-# 3. Configurar la API key
-# Crear el archivo blog-frontend/.env.local con:
-VITE_RAWG_API_KEY=tu_clave_aqui
+# 3. Configurar variables de entorno
+#    Crear un archivo .env.local en la raíz con:
+VITE_RAWG_API_KEY=tu_api_key_de_rawg
 
 # 4. Levantar el servidor de desarrollo
 npm run dev
 ```
 
-La app estará disponible en `http://localhost:5173`.
+La app estará disponible en `http://localhost:5173`
+
+### Otros comandos
+
+```bash
+npm run build      # build de producción
+npm run preview    # preview del build
+npm run lint       # linter ESLint
+```
+
+---
+
+## Variables de entorno
+
+| Variable | Descripción |
+|----------|-------------|
+| `VITE_RAWG_API_KEY` | API key de RAWG Video Games Database |
+
+El archivo `.env.local` **nunca se commitea** (cubierto por `.gitignore`).
+Se incluye `.env.example` como plantilla.
+
+---
 
 ## Rutas
 
-| Ruta | Página |
-|------|--------|
-| `/` | Home — juegos destacados y botón aleatorio |
-| `/items` | Listado — búsqueda, filtros y paginación |
-| `/items/:id` | Detalle del juego — info, screenshots y favoritos |
-| `*` | 404 — página no encontrada |
+| Ruta | Página | Descripción |
+|------|--------|-------------|
+| `/` | Home | Juegos mejor valorados, hero con fondo, botón aleatorio |
+| `/items` | GameList | Listado completo con búsqueda, filtro y paginación |
+| `/items/:id` | GameDetail | Detalle del juego — usa `useParams` |
+| `*` | NotFound | Página 404 para rutas inexistentes |
+
+---
 
 ## Funcionalidades
 
-- Búsqueda y filtro de juegos en el listado
-- Botón "juego aleatorio" con `useNavigate`
-- Tema claro/oscuro persistente (Context API + localStorage)
-- Sistema de favoritos persistente (Context API + localStorage)
-- Página 404 para rutas no encontradas
-- Componentes reutilizables con PropTypes documentados
+- **Búsqueda** de juegos en tiempo real desde RAWG API
+- **Filtro por orden**: mejor valorados, más recientes, nombre, Metacritic
+- **Paginación** con botón "Cargar más"
+- **Juego aleatorio** con `useNavigate` (disponible en Home y GameList)
+- **Favoritos** persistentes en `localStorage` (Context API)
+- **Tema claro/oscuro** persistente en `localStorage` (Context API)
+- **Página 404** para cualquier ruta no definida
+- **Screenshots** del juego en la página de detalle
 
-## Componentes con PropTypes
+---
 
-| Componente | Props documentadas |
-|------------|--------------------|
-| `GameCard` | `game` (shape completo) |
-| `SearchBar` | `value`, `onChange`, `onClear`, `placeholder` |
-| `FavoriteButton` | `isFavorite`, `onClick`, `label` |
+## Componentes reutilizables con PropTypes
 
-## Demo
+### `GameCard`
+Tarjeta de juego con imagen, rating, géneros, año y botón de favorito.
 
-El video demostrando las 3 rutas principales está en la carpeta `/demo`.
+| Prop | Tipo | Requerida | Descripción |
+|------|------|-----------|-------------|
+| `game` | `shape` | ✅ | Objeto de juego de la API |
+| `game.id` | `number` | ✅ | ID único del juego |
+| `game.name` | `string` | ✅ | Nombre del juego |
+| `game.background_image` | `string` | — | URL de la imagen de portada |
+| `game.rating` | `number` | — | Rating (0–5) |
+| `game.released` | `string` | — | Fecha de lanzamiento |
+| `game.genres` | `array` | — | Lista de géneros `[{ id, name }]` |
+
+### `SearchBar`
+Campo de búsqueda con botón para limpiar.
+
+| Prop | Tipo | Requerida | Descripción |
+|------|------|-----------|-------------|
+| `value` | `string` | ✅ | Valor actual del input |
+| `onChange` | `func` | ✅ | Callback al cambiar el texto |
+| `onClear` | `func` | ✅ | Callback al limpiar |
+| `placeholder` | `string` | — | Texto placeholder (default: `"Buscar..."`) |
+
+### `Navbar`
+Barra de navegación con links internos y toggle de tema.
+Consume el contexto internamente — sin props externas.
+
+---
+
+## Estado global — Context API
+
+`AppContext` expone a toda la app:
+
+| Valor | Tipo | Descripción |
+|-------|------|-------------|
+| `theme` | `string` | `'dark'` o `'light'` |
+| `toggleTheme` | `func` | Alterna entre temas |
+| `favorites` | `array` | Juegos marcados como favoritos |
+| `toggleFavorite(game)` | `func` | Agrega o quita un juego de favoritos |
+| `isFavorite(id)` | `func` | Retorna `true` si el juego está en favoritos |
+
+El tema y los favoritos se persisten en `localStorage`.
+
+---
 
 ## Estructura del proyecto
 
 ```
-blog-frontend/
+ej4-react/
+├── demo/                    # Video de demostración
+├── public/
+│   └── favicon.svg
 ├── src/
-│   ├── api/           # Capa de servicios (RAWG API)
-│   ├── components/    # Componentes reutilizables
-│   ├── context/       # AppContext (tema + favoritos)
-│   └── pages/         # Home, GameList, GameDetail, NotFound
-├── .env.local         # API key (NO se commitea)
-├── .env.example       # Plantilla de variables de entorno
-└── package.json
+│   ├── api/
+│   │   └── rawg.js          # Servicio RAWG: getGames, getGameById, getGameScreenshots, getRandomGame
+│   ├── assets/
+│   ├── components/
+│   │   ├── GameCard.jsx     # Tarjeta de juego (PropTypes)
+│   │   ├── GameCard.css
+│   │   ├── Navbar.jsx       # Navegación con <Link> (PropTypes)
+│   │   ├── Navbar.css
+│   │   ├── SearchBar.jsx    # Buscador (PropTypes)
+│   │   └── SearchBar.css
+│   ├── context/
+│   │   └── AppContext.jsx   # Tema + favoritos (Context API)
+│   ├── pages/
+│   │   ├── Home.jsx         # Ruta /
+│   │   ├── GameList.jsx     # Ruta /items
+│   │   ├── GameDetail.jsx   # Ruta /items/:id
+│   │   └── NotFound.jsx     # Ruta *
+│   ├── App.jsx              # Definición de rutas
+│   ├── index.css            # Variables CSS globales + reset
+│   └── main.jsx             # Entry point con BrowserRouter + AppProvider
+├── .env.example             # Plantilla de variables de entorno
+├── .env.local               # API key real (NO commiteado)
+├── index.html
+├── package.json
+└── vite.config.js
 ```
+
+---
+
+## Demo
+
+El video mostrando las 3 rutas principales en funcionamiento está en la carpeta [`/demo`](./demo/).
