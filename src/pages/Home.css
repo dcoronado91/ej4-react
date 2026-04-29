@@ -1,0 +1,91 @@
+.home {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Hero ── */
+.home-hero {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 120px 20px 100px;
+}
+
+/* imagen de fondo */
+.home-hero::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  background-image: url('https://img.freepik.com/free-photo/close-up-shot-controller-hold-by-gamer-home-gaming-enjoying-leisure-time_482257-85725.jpg?semt=ais_hybrid&w=740&q=80');
+  background-size: cover;
+  background-position: center;
+  filter: blur(2px);
+  transform: scale(1.05);
+  z-index: 0;
+}
+
+/* overlay oscuro encima de la imagen */
+.home-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.75);
+  z-index: 1;
+}
+
+/* todo el contenido va encima del overlay */
+.home-hero > * {
+  position: relative;
+  z-index: 2;
+}
+
+.home-title {
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 16px;
+  letter-spacing: -1px;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+}
+
+.home-subtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 480px;
+  margin: 0 auto 36px;
+  line-height: 1.6;
+}
+
+.home-hero-btns {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ── Featured section ── */
+.home-featured {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 48px 32px 60px;
+}
+
+.home-featured h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--heading);
+  margin-bottom: 24px;
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 600px) {
+  .home-hero { padding: 80px 20px 64px; }
+  .home-featured { padding: 32px 16px 40px; }
+}
